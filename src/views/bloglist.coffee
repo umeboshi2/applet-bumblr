@@ -80,7 +80,7 @@ class SimpleBlogListView extends Backbone.Marionette.CompositeView
       # FIXME configure time elsewhere?
       setTimeout () ->
         button.hide()
-      , 2000 
+      , 2000
     handlerOut = (event) ->
       window.leaveevent = event
       button = $(event.target).find '.delete-blog-button'
