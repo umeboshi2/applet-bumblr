@@ -38,7 +38,7 @@ simple_post_view = tc.renderable (post) ->
         if size.width > current_width and size.width < 250
           current_size = size
           current_width = size.width
-      size = current_size
+      size = current_size 
       tc.a href:post.post_url, target:'_blank', ->
         tc.img src:size.url
 
@@ -128,7 +128,7 @@ class BlogPostListView extends Backbone.Marionette.CompositeView
       @ui.posts.show()
       #console.log "Images Loaded>.."
       @masonry.reloadItems()
-      @masonry.layout()
+      @masonry.layout()      
 
   onDomRefresh: () ->
     $('html').keydown @keydownHandler
