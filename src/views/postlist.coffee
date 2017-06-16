@@ -128,8 +128,8 @@ class BlogPostListView extends Backbone.Marionette.CompositeView
       @ui.posts.show()
       #console.log "Images Loaded>.."
       @masonry.reloadItems()
-      @masonry.layout()      
-
+      @masonry.layout()
+      
   onDomRefresh: () ->
     $('html').keydown @keydownHandler
     @masonry = new Masonry "#posts-container",
@@ -142,6 +142,7 @@ class BlogPostListView extends Backbone.Marionette.CompositeView
     #console.log "Remove @keydownHandler" + @keydownHandler
     $('html').unbind 'keydown', @keydownHandler
     @stop_slideshow()
+    @masonry.destroy()
 
 
 
