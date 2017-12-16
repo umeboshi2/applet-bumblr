@@ -15,6 +15,7 @@
     "backbone.validation": "^0.7.1",
     "jquery": "3",
     "marionette.toolkit": "^4.0.0",
+    "tbirds": "^0.3.25",
     "teacup": "^2.0.0",
     "underscore": "^1.8.3"
   }
