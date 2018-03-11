@@ -51,7 +51,7 @@ class ToolbarView extends Backbone.Marionette.View
     
 class Controller extends MainController
   layoutClass: ToolbarAppletLayout
-  setup_layout_if_needed: ->
+  setupLayoutIfNeeded: ->
     super()
     view = new ToolbarView
       model: toolbar_data
@@ -63,7 +63,7 @@ class Controller extends MainController
     
   start: ->
     #console.log 'bumblr start called'
-    @setup_layout_if_needed()
+    @setupLayoutIfNeeded()
     @set_header 'Bumblr'
     @list_blogs()
 
@@ -81,7 +81,7 @@ class Controller extends MainController
     scroll_top_fast()
       
   list_blogs: () ->
-    @setup_layout_if_needed()
+    @setupLayoutIfNeeded()
     require.ensure [], () =>
       blogs = BumblrChannel.request 'get_local_blogs'
       SimpleBlogListView = require './views/bloglist'
@@ -93,7 +93,7 @@ class Controller extends MainController
     
   view_blog: (blog_id) ->
     #console.log 'view blog called for ' + blog_id
-    @setup_layout_if_needed()
+    @setupLayoutIfNeeded()
     require.ensure [], () =>
       host = blog_id + '.tumblr.com'
       collection = BumblrChannel.request 'make_blog_post_collection', host
@@ -108,7 +108,7 @@ class Controller extends MainController
     , 'bumblr-view-blog-view'
     
   add_new_blog: () ->
-    @setup_layout_if_needed()
+    @setupLayoutIfNeeded()
     require.ensure [], () =>
       NewBlogFormView = require './views/newblog'
       view = new NewBlogFormView
@@ -119,7 +119,7 @@ class Controller extends MainController
     
           
   settings_page: () ->
-    @setup_layout_if_needed()
+    @setupLayoutIfNeeded()
     require.ensure [], () =>
       ConsumerKeyFormView = require './views/settingsform'
       settings = BumblrChannel.request 'get_app_settings'

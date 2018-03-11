@@ -1,3 +1,4 @@
+$ = require 'jquery'
 Backbone = require 'backbone'
 Marionette = require 'backbone.marionette'
 Masonry = require 'masonry-layout'
