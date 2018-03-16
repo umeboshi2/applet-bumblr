@@ -36,7 +36,7 @@ class BlogPosts extends PageableCollection
     total_posts = response.response.total_posts
     @state.totalRecords = total_posts
     super response.response.posts
-   state:
+  state:
     firstPage: 0
     pageSize: 15
     
