@@ -1,7 +1,8 @@
-Marionette = require 'backbone.marionette'
+import Marionette from 'backbone.marionette'
 
-TkApplet = require 'tbirds/tkapplet'
-Controller = require './controller'
+import TkApplet from 'tbirds/tkapplet'
+
+import Controller from './controller'
 
 MainChannel = Backbone.Radio.channel 'global'
 BumblrChannel = Backbone.Radio.channel 'bumblr'
@@ -28,13 +29,5 @@ class Applet extends TkApplet
     blog_collection.fetch()
     super arguments
   
-MainChannel.reply 'applet:bumblr:route', () ->
-  console.warn "Don't use applet:bumblr:route"
-  controller = new Controller MainChannel
-  blog_collection = BumblrChannel.request 'get_local_blogs'
-  # FIXME use better lscollection
-  blog_collection.fetch()
-  router = new Router
-    controller: controller
-    
-module.exports = Applet
+
+export default Applet
