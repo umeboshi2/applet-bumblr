@@ -1,62 +1,22 @@
-$ = require 'jquery'
-Backbone = require 'backbone'
-Marionette = require 'backbone.marionette'
-tc = require 'teacup'
+import $ from 'jquery'
+import Backbone from 'backbone'
+import Marionette from 'backbone.marionette'
+import tc from 'teacup'
 
-scroll_top_fast = require 'tbirds/util/scroll-top-fast'
-navigate_to_url = require 'tbirds/util/navigate-to-url'
+import scroll_top_fast from 'tbirds/util/scroll-top-fast'
+import navigate_to_url from 'tbirds/util/navigate-to-url'
 
-{ MainController } = require 'tbirds/controllers'
-{ ToolbarAppletLayout } = require 'tbirds/views/layout'
+import { MainController } from 'tbirds/controllers'
+import { ToolbarAppletLayout } from 'tbirds/views/layout'
 
-Models = require './models'
-Collections = require './collections'
+import './dbchannel'
 
 MiscViews = require './views/misc'
 
 BumblrChannel = Backbone.Radio.channel 'bumblr'
 
 
-toolbar_data = new Backbone.Model
-  entries: [
-    {
-      name: 'List Blogs'
-      url: '#bumblr/listblogs'
-      icon: 'list'
-    }
-    {
-      name: 'Settings'
-      url: '#bumblr/settings'
-      icon: 'gear'
-    }
-    ]
-
-toolbar_template = tc.renderable (model) ->
-  tc.div '.btn-group.btn-group-justified', ->
-    for entry in model.entries
-      tc.div '.toolbar-button.btn.btn-default',
-      'button-url': entry.url, ->
-        tc.span ".fa.fa-#{entry.icon}", ' ' + entry.name
-
-class ToolbarView extends Backbone.Marionette.View
-  template: toolbar_template
-  ui:
-    toolbarButton: '.toolbar-button'
-  events:
-    'click @ui.toolbarButton': 'toolbarButtonPressed'
-  toolbarButtonPressed: (event) ->
-    console.log "toolbarButtonPressed", event
-    url = event.currentTarget.getAttribute 'button-url'
-    navigate_to_url url
-    
 class Controller extends MainController
-  layoutClass: ToolbarAppletLayout
-  setupLayoutIfNeeded: ->
-    super()
-    view = new ToolbarView
-      model: toolbar_data
-    @layout.showChildView 'toolbar', view
-    
   set_header: (title) ->
     header = $ '#header'
     header.text title
@@ -65,7 +25,7 @@ class Controller extends MainController
     #console.log 'bumblr start called'
     @setupLayoutIfNeeded()
     @set_header 'Bumblr'
-    @list_blogs()
+    @listBlogs()
 
   default_view: ->
     @start()
@@ -75,15 +35,15 @@ class Controller extends MainController
     @layout.showChildView 'content', view
     scroll_top_fast()
     
-  show_dashboard: () ->
+  showDashboard: () ->
     view = new MiscViews.BumblrDashboardView
     @layout.showChildView 'content', view
     scroll_top_fast()
       
-  list_blogs: () ->
+  listBlogs: () ->
     @setupLayoutIfNeeded()
     require.ensure [], () =>
-      blogs = BumblrChannel.request 'get_local_blogs'
+      blogs = BumblrChannel.request 'get-local-blogs'
       SimpleBlogListView = require './views/bloglist'
       view = new SimpleBlogListView
         collection: blogs
@@ -91,12 +51,12 @@ class Controller extends MainController
     # name the chunk
     , 'bumblr-view-list-blogs'
     
-  view_blog: (blog_id) ->
+  viewBlog: (blog_id) ->
     #console.log 'view blog called for ' + blog_id
     @setupLayoutIfNeeded()
     require.ensure [], () =>
-      host = blog_id + '.tumblr.com'
-      collection = BumblrChannel.request 'make_blog_post_collection', host
+      host = "#{blog_id}.tumblr.com"
+      collection = BumblrChannel.request 'make-blog-post-collection', host
       BlogPostListView = require './views/postlist'
       response = collection.fetch()
       response.done =>
@@ -104,10 +64,29 @@ class Controller extends MainController
           collection: collection
         @layout.showChildView 'content', view
         scroll_top_fast()
+        #$('html').attr
+        #  height: '100%'
     # name the chunk
     , 'bumblr-view-blog-view'
     
-  add_new_blog: () ->
+  viewBlogPix: (blog_id) ->
+    #console.log 'view blog called for ' + blog_id
+    @setupLayoutIfNeeded()
+    require.ensure [], () =>
+      host = "#{blog_id}.tumblr.com"
+      collection = BumblrChannel.request 'make-pix-collection', host
+      window.pix = collection
+      View = require './views/picview'
+      response = collection.getFirstPage()
+      response.done =>
+        view = new View
+          collection: collection
+        @layout.showChildView 'content', view
+        scroll_top_fast()
+    # name the chunk
+    , 'bumblr-view-blog-view'
+    
+  addNewBlog: () ->
     @setupLayoutIfNeeded()
     require.ensure [], () =>
       NewBlogFormView = require './views/newblog'
@@ -118,10 +97,10 @@ class Controller extends MainController
     , 'bumblr-view-add-blog'
     
           
-  settings_page: () ->
+  settingsPage: () ->
     @setupLayoutIfNeeded()
     require.ensure [], () =>
-      ConsumerKeyFormView = require './views/settingsform'
+      ConsumerKeyFormView = require('./views/settingsform').default
       settings = BumblrChannel.request 'get_app_settings'
       view = new ConsumerKeyFormView model:settings
       @layout.showChildView 'content', view
@@ -129,5 +108,5 @@ class Controller extends MainController
     # name the chunk
     , 'bumblr-view-settings'
     
-module.exports = Controller
+export default Controller
 

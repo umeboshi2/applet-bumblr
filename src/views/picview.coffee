@@ -15,19 +15,24 @@ BumblrChannel = Backbone.Radio.channel 'bumblr'
 ########################################
 simple_post_page_view = tc.renderable () ->
   tc.div '.mytoolbar.row', ->
-    tc.ul '.pager', ->
-      tc.li '.previous', ->
-        tc.i '#prev-page-button.fa.fa-arrow-left.btn.btn-default'
-      tc.li ->
-        tc.i '#slideshow-button.fa.fa-play.btn.btn-default'
-      tc.li '.next', ->
-        tc.i '#next-page-button.fa.fa-arrow-right.btn.btn-default'
+    tc.div '.btn-group', ->
+      tc.button '.previous.btn.btn-default', ->
+        tc.i '#prev-page-button.fa.fa-arrow-left'
+      tc.button '.slideshow-button.btn.btn-default', ->
+        tc.i '.fa.fa-play'
+      tc.button '.next.btn.btn-default', ->
+        tc.i '#next-page-button.fa.fa-arrow-right'
     #icon '#prev-page-button.fa.fa-arrow-left.btn.btn-default.pull-left'
     #icon '#slideshow-button.fa.fa-play.btn.btn-default'
   tc.div '#posts-container.row'
 
+
+imgStyle = "vertical-align:middle;height:100%;max-width:100%;max-height:100%;"
+imgStyle = "position:fixed;top:0;bottom:0;#{imgStyle}"
+divStyle = "height:100%;width:100%;"
+
 simple_post_view = tc.renderable (post) ->
-  tc.div '.listview-list-entry', ->
+  tc.div '.listview-list-entry', style: divStyle, ->
     #p ->
     # a href:post.post_url, target:'_blank', post.blog_name
     tc.span ->
@@ -35,13 +40,10 @@ simple_post_view = tc.renderable (post) ->
       photo = post.photos[0]
       current_width = 0
       current_size = null
-      for size in photo.alt_sizes
-        if size.width > current_width and size.width < 250
-          current_size = size
-          current_width = size.width
-      size = current_size
+      console.log "photo", photo
+      url = photo.original_size.url
       tc.a href:post.post_url, target:'_blank', ->
-        tc.img src:size.url
+        tc.img src:url, style: imgStyle
 
 ########################################
 class SimpleBlogPostView extends Backbone.Marionette.View
@@ -57,7 +59,7 @@ class BlogPostListView extends Backbone.Marionette.CompositeView
   childViewContainer: '#posts-container'
   ui:
     posts: '#posts-container'
-    slideshow_button: '#slideshow-button'
+    slideshow_button: '.slideshow-button'
     next_button: '#next-page-button'
     prev_putton: '#prev-page-button'
     
@@ -93,7 +95,6 @@ class BlogPostListView extends Backbone.Marionette.CompositeView
     @ui.slideshow_button.addClass 'fa-play'
 
   get_next_page: () ->
-    #@ui.posts.hide()
     response = @collection.getNextPage()
     response.done =>
       @set_image_layout()

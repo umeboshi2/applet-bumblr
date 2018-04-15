@@ -2,7 +2,7 @@ Backbone = require 'backbone'
 Marionette = require 'backbone.marionette'
 tc = require 'teacup'
 
-BootstrapFormView = require 'tbirds/views/bsformview'
+BootstrapFormView = require('tbirds/views/bsformview').default
 { form_group_input_div } = require 'tbirds/templates/forms'
 navigate_to_url = require 'tbirds/util/navigate-to-url'
 

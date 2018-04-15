@@ -4,7 +4,7 @@ Marionette = require 'backbone.marionette'
 Masonry = require 'masonry-layout'
 tc = require 'teacup'
 
-navigate_to_url = require 'tbirds/util/navigate-to-url'
+navigate_to_url = require('tbirds/util/navigate-to-url').default
 
 BumblrChannel = Backbone.Radio.channel 'bumblr'
 
@@ -20,8 +20,9 @@ blog_dialog_view = tc.renderable (blog) ->
 
 simple_blog_info = tc.renderable (blog) ->
   tc.div '.blog.listview-list-entry', ->
+    tc.i '.show-pix.fa.fa-eye.btn-default'
     tc.a href:'#bumblr/viewblog/' + blog.name, blog.name
-    tc.i ".delete-blog-button.fa.fa-close.btn.btn-default.btn-xs",
+    tc.i ".delete-blog-button.fa.fa-close.btn-default",
     blog:blog.name
 
 simple_blog_list = tc.renderable () ->
@@ -35,14 +36,25 @@ class BlogModal extends Backbone.Marionette.View
 
 class SimpleBlogInfoView extends Backbone.Marionette.View
   template: simple_blog_info
+  ui:
+    deleteButton: '.delete-blog-button'
+    showPixButton: '.show-pix'
+  events:
+    'click @ui.showPixButton': 'showPix'
 
+  showPix: ->
+    name = @model.get 'name'
+    console.log "name is ", name
+    navigate_to_url "#bumblr/viewpix/#{name}"
+    
+    
 class SimpleBlogListView extends Backbone.Marionette.CompositeView
   childView: SimpleBlogInfoView
   template: simple_blog_list
   childViewContainer: '#bloglist-container'
   ui:
     blogs: '#bloglist-container'
-
+    
   onBeforeDestroy: ->
     @masonry.destroy()
     

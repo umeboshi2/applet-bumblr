@@ -1,9 +1,9 @@
-Backbone = require 'backbone'
-tc = require 'teacup'
+import Backbone from 'backbone'
+import tc from 'teacup'
 
-BootstrapFormView = require 'tbirds/views/bsformview'
-navigate_to_url = require 'tbirds/util/navigate-to-url'
-{ form_group_input_div } = require 'tbirds/templates/forms'
+import BootstrapFormView from 'tbirds/views/bsformview'
+import navigate_to_url from 'tbirds/util/navigate-to-url'
+import { form_group_input_div } from 'tbirds/templates/forms'
 
 BumblrChannel = Backbone.Radio.channel 'bumblr'
 
@@ -62,6 +62,6 @@ class ConsumerKeyFormView extends BootstrapFormView
     #console.log 'onSuccess called'
     navigate_to_url '#bumblr'
 
-module.exports = ConsumerKeyFormView
+export default ConsumerKeyFormView
 
 

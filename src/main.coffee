@@ -12,11 +12,13 @@ BumblrChannel = Backbone.Radio.channel 'bumblr'
 class Router extends Marionette.AppRouter
   appRoutes:
     'bumblr': 'start'
-    'bumblr/settings': 'settings_page'
-    'bumblr/dashboard': 'show_dashboard'
-    'bumblr/listblogs': 'list_blogs'
-    'bumblr/viewblog/:id': 'view_blog'
-    'bumblr/addblog' : 'add_new_blog'
+    'bumblr/settings': 'settingsPage'
+    'bumblr/dashboard': 'showDashboard'
+    'bumblr/listblogs': 'listBlogs'
+    'bumblr/viewblog/:id': 'viewBlog'
+    'bumblr/addblog' : 'addNewBlog'
+    'bumblr/viewpix/:id': 'viewBlogPix'
+    
 
 
 class Applet extends TkApplet
@@ -24,10 +26,33 @@ class Applet extends TkApplet
   Router: Router
 
   onBeforeStart: ->
-    blog_collection = BumblrChannel.request 'get_local_blogs'
+    blog_collection = BumblrChannel.request 'get-local-blogs'
     # FIXME use better lscollection
     blog_collection.fetch()
     super arguments
   
+  appletEntries: [
+    {
+      label: "Bumblr Menu"
+      menu: [
+        {
+          label: 'List Blogs'
+          url: '#bumblr/listblogs'
+          icon: '.fa.fa-list'
+        }
+        {
+          label: 'Add Blog'
+          url: '#bumblr/addblog'
+          icon: '.fa.fa-plus'
+        }
+        {
+          label: 'Settings'
+          url: '#bumblr/settings'
+          icon: '.fa.fa-gear'
+        }
+      ]
+    }
+  ]
+
 
 export default Applet
