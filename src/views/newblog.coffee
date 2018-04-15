@@ -28,8 +28,8 @@ class NewBlogFormView extends BootstrapFormView
 
   updateModel: ->
     #console.log 'updateModel'
-    @collection = BumblrChannel.request 'get_local_blogs'
-    @model = @collection.add_blog @ui.blog_name.val()
+    @collection = BumblrChannel.request 'get-local-blogs'
+    @model = @collection.addBlog @ui.blog_name.val()
 
   onSuccess: ->
     #console.log 'onSuccess called'

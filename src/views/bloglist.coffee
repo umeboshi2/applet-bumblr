@@ -41,12 +41,31 @@ class SimpleBlogInfoView extends Backbone.Marionette.View
     showPixButton: '.show-pix'
   events:
     'click @ui.showPixButton': 'showPix'
-
+    'click @ui.deleteButton': 'deleteBlog'
+  onDomRefresh: ->
+    handlerIn = (event) =>
+      @ui.deleteButton.show()
+    handlerOut = (event) =>
+      #setTimeout () =>
+      #  @ui.deleteButton.hide()
+      #, 200
+      @ui.deleteButton.hide()
+    @$el.hover handlerIn, handlerOut
+    @ui.deleteButton.hide()
+    
   showPix: ->
     name = @model.get 'name'
-    console.log "name is ", name
+    #console.log "name is ", name
     navigate_to_url "#bumblr/viewpix/#{name}"
-    
+
+  deleteBlog: ->
+    console.log "deleteBlog", @model
+    collection = @model.collection
+    @model.destroy()
+    collection.save()
+    # fixme do this in parent view
+    #@masonry.reloadItems()
+    #@masonry.layout()
     
 class SimpleBlogListView extends Backbone.Marionette.CompositeView
   childView: SimpleBlogInfoView
@@ -65,39 +84,10 @@ class SimpleBlogListView extends Backbone.Marionette.CompositeView
       isInitLayout: false
       itemSelector: '.blog'
       columnWidth: 100
-    delete_buttons = $ '.delete-blog-button'
-    delete_buttons.hide()
-    delete_buttons.on 'click', (event) =>
-      target = $ event.currentTarget
-      blog = target.attr 'blog'
-      id = "#{blog}.tumblr.com"
-      model = @collection.get id
-      model.destroy()
-      #console.log "Delete #{blog}"
-      @masonry.reloadItems()
-      @masonry.layout()
     @set_layout()
 
   set_layout: ->
     @masonry.reloadItems()
     @masonry.layout()
-    blog = $ '.blog'
-    handlerIn = (event) ->
-      window.enterevent = event
-      button = $(event.target).find '.delete-blog-button'
-      button.show()
-      # set button to disappear after two seconds
-      # without this, some buttons appear to stick
-      # and stay when the mouse jumps between entries
-      # too quickly.
-      # FIXME configure time elsewhere?
-      setTimeout () ->
-        button.hide()
-      , 2000 
-    handlerOut = (event) ->
-      window.leaveevent = event
-      button = $(event.target).find '.delete-blog-button'
-      button.hide()
-    blog.hover handlerIn, handlerOut
 
 module.exports = SimpleBlogListView

@@ -64,8 +64,6 @@ class Controller extends MainController
           collection: collection
         @layout.showChildView 'content', view
         scroll_top_fast()
-        #$('html').attr
-        #  height: '100%'
     # name the chunk
     , 'bumblr-view-blog-view'
     

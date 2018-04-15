@@ -29,6 +29,10 @@ class Applet extends TkApplet
     blog_collection = BumblrChannel.request 'get-local-blogs'
     # FIXME use better lscollection
     blog_collection.fetch()
+    if blog_collection.isEmpty()
+      ['dutch-and-flemish-painters', 'gkar56', 'flowerfood',
+      '8bitfuture', 'dendroica'].forEach (blog) ->
+        blog_collection.addBlog blog
     super arguments
   
   appletEntries: [
