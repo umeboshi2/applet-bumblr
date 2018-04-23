@@ -5,7 +5,7 @@ import TkApplet from 'tbirds/tkapplet'
 import Controller from './controller'
 
 MainChannel = Backbone.Radio.channel 'global'
-BumblrChannel = Backbone.Radio.channel 'bumblr'
+AppChannel = Backbone.Radio.channel 'bumblr'
 
 
 
@@ -26,12 +26,13 @@ class Applet extends TkApplet
   Router: Router
 
   onBeforeStart: ->
-    blog_collection = BumblrChannel.request 'get-local-blogs'
+    blog_collection = AppChannel.request 'get-local-blogs'
     # FIXME use better lscollection
     blog_collection.fetch()
     if blog_collection.isEmpty()
-      ['dutch-and-flemish-painters', 'gkar56', 'flowerfood',
-      '8bitfuture', 'dendroica'].forEach (blog) ->
+      ['dutch-and-flemish-painters', 'gkar56', 'japanesesuburbia',
+      '8bitfuture', 'elfwud', 'hexeosis', 'pixel8or',
+      'necessary-disorder'].forEach (blog) ->
         blog_collection.addBlog blog
     super arguments
   

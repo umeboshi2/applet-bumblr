@@ -13,7 +13,7 @@ import './dbchannel'
 
 MiscViews = require './views/misc'
 
-BumblrChannel = Backbone.Radio.channel 'bumblr'
+AppChannel = Backbone.Radio.channel 'bumblr'
 
 
 class Controller extends MainController
@@ -43,7 +43,7 @@ class Controller extends MainController
   listBlogs: () ->
     @setupLayoutIfNeeded()
     require.ensure [], () =>
-      blogs = BumblrChannel.request 'get-local-blogs'
+      blogs = AppChannel.request 'get-local-blogs'
       SimpleBlogListView = require './views/bloglist'
       view = new SimpleBlogListView
         collection: blogs
@@ -56,7 +56,7 @@ class Controller extends MainController
     @setupLayoutIfNeeded()
     require.ensure [], () =>
       host = "#{blog_id}.tumblr.com"
-      collection = BumblrChannel.request 'make-blog-post-collection', host
+      collection = AppChannel.request 'make-blog-post-collection', host
       BlogPostListView = require './views/postlist'
       response = collection.fetch()
       response.done =>
@@ -72,7 +72,7 @@ class Controller extends MainController
     @setupLayoutIfNeeded()
     require.ensure [], () =>
       host = "#{blog_id}.tumblr.com"
-      collection = BumblrChannel.request 'make-pix-collection', host
+      collection = AppChannel.request 'make-pix-collection', host
       window.pix = collection
       View = require './views/picview'
       response = collection.getFirstPage()
@@ -99,7 +99,7 @@ class Controller extends MainController
     @setupLayoutIfNeeded()
     require.ensure [], () =>
       ConsumerKeyFormView = require('./views/settingsform').default
-      settings = BumblrChannel.request 'get_app_settings'
+      settings = AppChannel.request 'get_app_settings'
       view = new ConsumerKeyFormView model:settings
       @layout.showChildView 'content', view
       scroll_top_fast()
