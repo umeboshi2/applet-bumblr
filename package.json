@@ -2,7 +2,7 @@
   "name": "applet-bumblr",
   "version": "0.1.0",
   "description": "tbirds bumblr applet",
-  "main": "build/bumblr.js",
+  "main": "src/main.coffee",
   "scripts": {
     "build": "webpack",
     "compile": "NODE_ENV=production webpack",
