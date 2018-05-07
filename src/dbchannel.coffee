@@ -2,30 +2,16 @@ import $ from 'jquery'
 import Backbone from 'backbone'
 import PageableCollection from 'backbone.paginator'
 
+import { LoveStore } from 'backbone.lovefield'
 import { BaseLocalStorageCollection } from 'tbirds/lscollection'
+import BaseLocalStorageModel from 'tbirds/base-localstorage-model'
 
 MainChannel = Backbone.Radio.channel 'global'
 AppChannel = Backbone.Radio.channel 'bumblr'
 
+dbConn = MainChannel.request 'main:app:dbConn', 'bumblr'
 baseURL = '//api.tumblr.com/v2'
 
-class BaseLocalStorageModel extends Backbone.Model
-  initialize: ->
-    @fetch()
-    @on 'change', @save, @
-  fetch: () ->
-    @set JSON.parse localStorage.getItem @id
-  save: (attributes, options) ->
-    localStorage.setItem(@id, JSON.stringify(@toJSON()))
-    return $.ajax
-      success: options.success
-      error: options.error
-  destroy: (options) ->
-    return localStorage.removeItem @id
-  isEmpty: () ->
-    return _.size @attributes <= 1
-
-    
 class BlogPosts extends PageableCollection
   mode: 'server'
   full: true
@@ -37,12 +23,13 @@ class BlogPosts extends PageableCollection
     options || options = {}
     data = (options.data || {})
     currentPage = @state.currentPage
-    offset = currentPage * @state.pageSize
-    options.offset = offset
+    #offset = currentPage * @state.pageSize
+    #options.offset = offset
     options.dataType = 'jsonp'
     super options
     
   parse: (response) ->
+    console.log "PARSE", response
     total_posts = response.response.total_posts
     @state.totalRecords = total_posts
     super response.response.posts
@@ -55,9 +42,6 @@ class BlogPosts extends PageableCollection
     offset: () ->
       @state.currentPage * @state.pageSize
     
-class BumblrSettings extends BaseLocalStorageModel
-  id: 'bumblr_settings'
-  
 class BaseTumblrModel extends Backbone.Model
   baseURL: baseURL
   
@@ -73,17 +57,22 @@ class PhotoPostCollection extends Backbone.Collection
 
 
 
-consumer_key = '4mhV8B1YQK6PUA2NW8eZZXVHjU55TPJ3UZnZGrbSoCnqJaxDyH'
+class BumblrSettings extends BaseLocalStorageModel
+  id: 'bumblr_settings'
+  
 settings = new BumblrSettings()
+AppChannel.reply 'get_app_settings', ->
+  return settings
+
+consumer_key = '4mhV8B1YQK6PUA2NW8eZZXVHjU55TPJ3UZnZGrbSoCnqJaxDyH'
 skey = settings.get 'consumer_key'
 if not skey
   console.log "saving initial app settings"
   settings.set 'consumer_key', consumer_key
   settings.save()
 
-AppChannel.reply 'get_app_settings', ->
-  return settings
 
+BlogStore = new LoveStore dbConn, 'Blog'
 
 
 class LocalBlogCollection extends BaseLocalStorageCollection
