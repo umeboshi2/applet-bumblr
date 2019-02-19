@@ -27,7 +27,11 @@ WebPackOutput =
 
 coffeeLoaderRule =
   test: /\.coffee$/
-  use: ['coffee-loader']
+  loader: 'coffee-loader'
+  options:
+    transpile:
+      presets: ['env']
+    sourceMap: true
 
 common_plugins = []
 extraPlugins = []
@@ -36,7 +40,12 @@ WebPackOptimization = {}
 if BuildEnvironment is 'production'
   UglifyJsPlugin = require 'uglifyjs-webpack-plugin'
   WebPackOptimization.minimizer = [
-    new UglifyJsPlugin()
+    new UglifyJsPlugin
+      sourceMap: true
+      uglifyOptions:
+        compress:
+          warnings: true
+        warnings: true
     ]
 AllPlugins = common_plugins.concat extraPlugins
 
