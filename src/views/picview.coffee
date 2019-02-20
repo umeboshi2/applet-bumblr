@@ -46,14 +46,14 @@ simple_post_view = tc.renderable (post) ->
         tc.img src:url, style: imgStyle
 
 ########################################
-class SimpleBlogPostView extends Backbone.Marionette.View
+class SimpleBlogPostView extends Marionette.View
   template: simple_post_view
   className: 'post'
 
 
 
 
-class BlogPostListView extends Backbone.Marionette.CompositeView
+class BlogPostListView extends Marionette.CollectionView
   template: simple_post_page_view
   childView: SimpleBlogPostView
   childViewContainer: '#posts-container'

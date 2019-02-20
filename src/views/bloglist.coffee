@@ -31,10 +31,10 @@ simple_blog_list = tc.renderable () ->
     tc.div '#bloglist-container.listview-list'
 
 ########################################
-class BlogModal extends Backbone.Marionette.View
+class BlogModal extends Marionette.View
   template: blog_dialog_view
 
-class SimpleBlogInfoView extends Backbone.Marionette.View
+class SimpleBlogInfoView extends Marionette.View
   template: simple_blog_info
   ui:
     deleteButton: '.delete-blog-button'
@@ -67,7 +67,7 @@ class SimpleBlogInfoView extends Backbone.Marionette.View
     #@masonry.reloadItems()
     #@masonry.layout()
     
-class SimpleBlogListView extends Backbone.Marionette.CompositeView
+class SimpleBlogListView extends Marionette.CollectionView
   childView: SimpleBlogInfoView
   template: simple_blog_list
   childViewContainer: '#bloglist-container'

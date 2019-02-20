@@ -14,10 +14,10 @@ bumblr_dashboard_view = tc.renderable (model) ->
 
 
 ########################################
-class MainBumblrView extends Backbone.Marionette.View
+class MainBumblrView extends Marionette.View
   template: main_bumblr_view
 
-class BumblrDashboardView extends Backbone.Marionette.View
+class BumblrDashboardView extends Marionette.View
   template: bumblr_dashboard_view
 
 module.exports =

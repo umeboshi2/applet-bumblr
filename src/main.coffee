@@ -1,5 +1,5 @@
 import Marionette from 'backbone.marionette'
-
+import AppRouter from 'marionette.approuter'
 import TkApplet from 'tbirds/tkapplet'
 
 import Controller from './controller'
@@ -9,7 +9,7 @@ AppChannel = Backbone.Radio.channel 'bumblr'
 
 
 
-class Router extends Marionette.AppRouter
+class Router extends AppRouter
   appRoutes:
     'bumblr': 'start'
     'bumblr/settings': 'settingsPage'
