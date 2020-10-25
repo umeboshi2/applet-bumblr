@@ -1,15 +1,14 @@
-Backbone = require 'backbone'
-Marionette = require 'backbone.marionette'
-tc = require 'teacup'
+import { Radio, Model } from 'backbone'
+import tc from 'teacup'
 
-BootstrapFormView = require('tbirds/views/bsformview').default
-{ form_group_input_div } = require 'tbirds/templates/forms'
-navigate_to_url = require 'tbirds/util/navigate-to-url'
+import BootstrapFormView  from 'tbirds/views/bsformview'
+import { form_group_input_div } from 'tbirds/templates/forms'
+import navigate_to_url from 'tbirds/util/navigate-to-url'
 
-BumblrChannel = Backbone.Radio.channel 'bumblr'
+AppChannel = Radio.channel 'bumblr'
 
 ########################################
-new_blog_form_view = tc.renderable (model) ->
+new_blog_form_view = tc.renderable ->
   form_group_input_div
     input_id: 'input_blogname'
     label: 'Blog Name'
@@ -28,7 +27,7 @@ class NewBlogFormView extends BootstrapFormView
 
   updateModel: ->
     #console.log 'updateModel'
-    @collection = BumblrChannel.request 'get-local-blogs'
+    @collection = AppChannel.request 'get-local-blogs'
     @model = @collection.addBlog @ui.blog_name.val()
 
   onSuccess: ->
@@ -36,10 +35,8 @@ class NewBlogFormView extends BootstrapFormView
     navigate_to_url '#bumblr/listblogs'
 
   createModel: ->
-    return new Backbone.Model url:'/'
+    return new Model url:'/'
 
-
-
-module.exports = NewBlogFormView
+export default NewBlogFormView
 
 

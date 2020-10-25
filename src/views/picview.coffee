@@ -1,16 +1,8 @@
-$ = require 'jquery'
-Backbone = require 'backbone'
-Marionette = require 'backbone.marionette'
-Masonry = require 'masonry-layout'
-imagesLoaded = require 'imagesloaded'
-tc = require 'teacup'
-
-
-#require 'jquery-ui'
-
-navigate_to_url = require 'tbirds/util/navigate-to-url'
-
-BumblrChannel = Backbone.Radio.channel 'bumblr'
+import $ from 'jquery'
+import { View as MnView } from 'backbone.marionette'
+import Masonry from 'masonry-layout'
+import imagesLoaded from 'imagesloaded'
+import tc from 'teacup'
 
 ########################################
 simple_post_page_view = tc.renderable () ->
@@ -38,22 +30,22 @@ simple_post_view = tc.renderable (post) ->
     tc.span ->
       #for photo in post.photos
       photo = post.photos[0]
-      current_width = 0
-      current_size = null
+      #current_width = 0
+      #current_size = null
       console.log "photo", photo
       url = photo.original_size.url
       tc.a href:post.post_url, target:'_blank', ->
         tc.img src:url, style: imgStyle
 
 ########################################
-class SimpleBlogPostView extends Marionette.View
+class SimpleBlogPostView extends MnView
   template: simple_post_view
   className: 'post'
 
 
 
 
-class BlogPostListView extends Marionette.CollectionView
+class BlogPostListView extends MnView
   template: simple_post_page_view
   childView: SimpleBlogPostView
   childViewContainer: '#posts-container'
@@ -148,4 +140,4 @@ class BlogPostListView extends Marionette.CollectionView
 
 
 
-module.exports = BlogPostListView
+export default BlogPostListView

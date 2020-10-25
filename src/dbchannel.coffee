@@ -1,13 +1,13 @@
 import $ from 'jquery'
-import Backbone from 'backbone'
+import { Model, Collection, Radio } from 'backbone'
 import PageableCollection from 'backbone.paginator'
 
 import { LoveStore } from 'backbone.lovefield'
 import { BaseLocalStorageCollection } from 'tbirds/lscollection'
 import BaseLocalStorageModel from 'tbirds/base-localstorage-model'
 
-MainChannel = Backbone.Radio.channel 'global'
-AppChannel = Backbone.Radio.channel 'bumblr'
+MainChannel = Radio.channel 'global'
+AppChannel = Radio.channel 'bumblr'
 
 dbConn = MainChannel.request 'main:app:dbConn', 'bumblr'
 baseURL = '//api.tumblr.com/v2'
@@ -21,10 +21,6 @@ class BlogPosts extends PageableCollection
 
   fetch: (options) ->
     options || options = {}
-    data = (options.data || {})
-    currentPage = @state.currentPage
-    #offset = currentPage * @state.pageSize
-    #options.offset = offset
     options.dataType = 'jsonp'
     super options
     
@@ -42,20 +38,17 @@ class BlogPosts extends PageableCollection
     offset: () ->
       @state.currentPage * @state.pageSize
     
-class BaseTumblrModel extends Backbone.Model
+class BaseTumblrModel extends Model
   baseURL: baseURL
   
 class BlogInfo extends BaseTumblrModel
   url: () ->
     "#{@baseURL}/blog/#{@id}/info?api_key=#{@apiKey}&callback=?"
 
-class PhotoPostCollection extends Backbone.Collection
+export class PhotoPostCollection extends Collection
   url: () ->
     "#{baseURL}/#{@id}/posts/photo?callback=?"
     
-
-
-
 
 class BumblrSettings extends BaseLocalStorageModel
   id: 'bumblr_settings'
@@ -73,13 +66,14 @@ if not skey
 
 
 BlogStore = new LoveStore dbConn, 'Blog'
-
+if __DEV__ and DEBUG
+  console.log "created BlogStore", BlogStore
+  
 
 class LocalBlogCollection extends BaseLocalStorageCollection
   model: BlogInfo
   addBlog: (name) ->
     siteName = "#{name}.tumblr.com"
-    atts =
     model = new @model
       id: siteName
       name: name

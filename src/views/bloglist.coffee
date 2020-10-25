@@ -1,23 +1,11 @@
-$ = require 'jquery'
-Backbone = require 'backbone'
-Marionette = require 'backbone.marionette'
-Masonry = require 'masonry-layout'
-tc = require 'teacup'
+import $ from 'jquery'
+import { View as MnView, CollectionView } from 'backbone.marionette'
+import Masonry from 'masonry-layout'
+import tc from 'teacup'
+import navigate_to_url from 'tbirds/util/navigate-to-url'
 
-navigate_to_url = require('tbirds/util/navigate-to-url').default
-
-BumblrChannel = Backbone.Radio.channel 'bumblr'
 
 ########################################
-blog_dialog_view = tc.renderable (blog) ->
-  tc.div '.modal-header', ->
-    tc.h2 'This is a modal!'
-  tc.div '.modal-body', ->
-    tc.p 'here is some content'
-  tc.div '.modal-footer', ->
-    tc.button '#modal-cancel-button.btn', 'cancel'
-    tc.button '#modal-ok-button.btn.btn-default', 'Ok'
-
 simple_blog_info = tc.renderable (blog) ->
   tc.div '.blog.listview-list-entry', ->
     tc.i '.show-pix.fa.fa-eye.btn-default'
@@ -31,10 +19,7 @@ simple_blog_list = tc.renderable () ->
     tc.div '#bloglist-container.listview-list'
 
 ########################################
-class BlogModal extends Marionette.View
-  template: blog_dialog_view
-
-class SimpleBlogInfoView extends Marionette.View
+class SimpleBlogInfoView extends MnView
   template: simple_blog_info
   ui:
     deleteButton: '.delete-blog-button'
@@ -43,9 +28,9 @@ class SimpleBlogInfoView extends Marionette.View
     'click @ui.showPixButton': 'showPix'
     'click @ui.deleteButton': 'deleteBlog'
   onDomRefresh: ->
-    handlerIn = (event) =>
+    handlerIn = () =>
       @ui.deleteButton.show()
-    handlerOut = (event) =>
+    handlerOut = () =>
       #setTimeout () =>
       #  @ui.deleteButton.hide()
       #, 200
@@ -59,7 +44,7 @@ class SimpleBlogInfoView extends Marionette.View
     navigate_to_url "#bumblr/viewpix/#{name}"
 
   deleteBlog: ->
-    console.log "deleteBlog", @model
+    #console.log "deleteBlog", @model
     collection = @model.collection
     @model.destroy()
     collection.save()
@@ -67,7 +52,7 @@ class SimpleBlogInfoView extends Marionette.View
     #@masonry.reloadItems()
     #@masonry.layout()
     
-class SimpleBlogListView extends Marionette.CollectionView
+class SimpleBlogListView extends CollectionView
   childView: SimpleBlogInfoView
   template: simple_blog_list
   childViewContainer: '#bloglist-container'
@@ -77,8 +62,8 @@ class SimpleBlogListView extends Marionette.CollectionView
   onBeforeDestroy: ->
     @masonry.destroy()
     
-  onDomRefresh: () ->
-    console.log 'onDomRefresh called on SimpleBlogListView'
+  onDomRefresh: ->
+    #console.log 'onDomRefresh called on SimpleBlogListView'
     @masonry = new Masonry "#bloglist-container",
       gutter: 2
       isInitLayout: false
@@ -90,4 +75,4 @@ class SimpleBlogListView extends Marionette.CollectionView
     @masonry.reloadItems()
     @masonry.layout()
 
-module.exports = SimpleBlogListView
+export default  SimpleBlogListView

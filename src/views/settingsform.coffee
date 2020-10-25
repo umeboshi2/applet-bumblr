@@ -1,11 +1,11 @@
-import Backbone from 'backbone'
+import { Radio } from 'backbone'
 import tc from 'teacup'
 
 import BootstrapFormView from 'tbirds/views/bsformview'
 import navigate_to_url from 'tbirds/util/navigate-to-url'
 import { form_group_input_div } from 'tbirds/templates/forms'
 
-BumblrChannel = Backbone.Radio.channel 'bumblr'
+BumblrChannel = Radio.channel 'bumblr'
 
 ########################################
 consumer_key_form = tc.renderable (settings) ->
@@ -58,7 +58,7 @@ class ConsumerKeyFormView extends BootstrapFormView
   createModel: ->
     BumblrChannel.request 'get_app_settings'
 
-  onSuccess: (model) ->
+  onSuccess: ->
     #console.log 'onSuccess called'
     navigate_to_url '#bumblr'
 

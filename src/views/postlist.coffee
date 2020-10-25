@@ -1,16 +1,9 @@
-$ = require 'jquery'
-Backbone = require 'backbone'
-Marionette = require 'backbone.marionette'
-Masonry = require 'masonry-layout'
-imagesLoaded = require 'imagesloaded'
+import $ from 'jquery'
+import { View as MnView, CollectionView } from 'backbone.marionette'
+import Masonry from 'masonry-layout'
+import imagesLoaded from 'imagesloaded'
 tc = require 'teacup'
 
-
-#require 'jquery-ui'
-
-navigate_to_url = require 'tbirds/util/navigate-to-url'
-
-BumblrChannel = Backbone.Radio.channel 'bumblr'
 
 ########################################
 simple_post_page_view = tc.renderable () ->
@@ -44,14 +37,15 @@ simple_post_view = tc.renderable (post) ->
         tc.img src:size.url
 
 ########################################
-class SimpleBlogPostView extends Marionette.View
+class SimpleBlogPostView extends MnView
   template: simple_post_view
   className: 'post'
 
 
 
 
-class BlogPostListView extends Marionette.CollectionView
+#class BlogPostListView extends Marionette.View
+class BlogPostListView extends CollectionView
   template: simple_post_page_view
   childView: SimpleBlogPostView
   childViewContainer: '#posts-container'
@@ -60,7 +54,8 @@ class BlogPostListView extends Marionette.CollectionView
     slideshow_button: '#slideshow-button'
     next_button: '#next-page-button'
     prev_putton: '#prev-page-button'
-    
+  regions:
+    posts: '@ui.posts'
   events:
     'click @ui.prev_putton': 'get_prev_page'
     'click @ui.next_button': 'get_next_page'
@@ -147,4 +142,4 @@ class BlogPostListView extends Marionette.CollectionView
 
 
 
-module.exports = BlogPostListView
+export default BlogPostListView

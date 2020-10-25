@@ -1,25 +1,11 @@
-Backbone = require 'backbone'
-Marionette = require 'backbone.marionette'
-tc = require 'teacup'
+import { View as MnView } from 'backbone.marionette'
+import tc from 'teacup'
 
+export class MainBumblrView extends MnView
+  template: tc.renderable ->
+    tc.p 'main bumblr view'
 
-BumblrChannel = Backbone.Radio.channel 'bumblr'
-
-########################################
-main_bumblr_view = tc.renderable (model) ->
-  tc.p 'main bumblr view'
-
-bumblr_dashboard_view = tc.renderable (model) ->
-  tc.p 'bumblr_dashboard_view'
-
-
-########################################
-class MainBumblrView extends Marionette.View
-  template: main_bumblr_view
-
-class BumblrDashboardView extends Marionette.View
-  template: bumblr_dashboard_view
-
-module.exports =
-  MainBumblrView: MainBumblrView
-  BumblrDashboardView: BumblrDashboardView
+export class BumblrDashboardView extends MnView
+  template: tc.renderable ->
+    tc.p 'bumblr_dashboard_view'
+  
